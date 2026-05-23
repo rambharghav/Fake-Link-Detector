@@ -1,11 +1,14 @@
 import { useLocation } from "react-router-dom";
 import { checkUrlSafety } from "../utils/urlChecker";
 import ResultCard from "../components/ResultCard";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 function Result() {
   const { state } = useLocation();
-  const result = checkUrlSafety(state.url);
+
+  const result = useMemo(() => {
+    return checkUrlSafety(state.url);
+  }, [state.url]);
 
   useEffect(() => {
     const history = JSON.parse(localStorage.getItem("history")) || [];
@@ -16,7 +19,7 @@ function Result() {
       date: new Date().toLocaleString()
     });
     localStorage.setItem("history", JSON.stringify(history));
-  }, []);
+  }, [state.url, result]);
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
